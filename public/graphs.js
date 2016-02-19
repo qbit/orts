@@ -43,14 +43,17 @@ function chartDefault(name, agg) {
 	    plotShadow: false
 	},
 	title: {
-	    text: '',
+	    text: name, 
 	    align: 'center',
 	    verticalAlign: 'middle',
-	    y: 40
+	    y: 90
 	},
 	tooltip: {
 	    pointFormat: '<b>{point.percentage:.1f}%</b>'
 	},
+        credits: {
+            enabled: false
+        },
 	plotOptions: {
 	    pie: {
 		dataLabels: {
