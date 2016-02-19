@@ -70,7 +70,7 @@
 		    install
 		    {{end}}
 		  </td>
-		  <td class="success-fail">
+		  <td class="success-fail" data-status="{{ if .Status }}success{{else}}fail{{end}}">
 		    {{if .Status}}
 		    <span class="glyphicon glyphicon-ok"></span>
 		    {{else}}
