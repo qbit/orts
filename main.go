@@ -24,6 +24,10 @@ type test struct {
 	Date        time.Time
 }
 
+func formatDate(t time.Time) string {
+	return t.Format(time.RFC1123)
+}
+
 type tests []test
 
 func getTests() (tests, error) {
@@ -85,7 +89,17 @@ from test
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	var templates = template.Must(template.ParseFiles("index.html"))
+	funcMap := template.FuncMap{
+		"formatDate": formatDate,
+	}
+
+	templ, err := template.New("index").Funcs(funcMap).ParseFiles("index.html")
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
 	table, err := getTests()
 	if err != nil {
 		log.Println(err)
@@ -93,7 +107,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	templates.ExecuteTemplate(w, "index.html", table)
+	templ.ExecuteTemplate(w, "index.html", table)
 }
 
 func main() {
