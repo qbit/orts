@@ -97,3 +97,11 @@
     display: inline-block;
     border-radius: 50%;
 }
+
+.glyphicon-ok {
+    color: green;
+}
+
+.glyphicon-remove {
+    color: red;
+}
