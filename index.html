@@ -10,6 +10,7 @@
     <link rel="icon" href="../../favicon.ico">
 
     <title>OpenBSD Release Testing Stats</title>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <style>
@@ -123,62 +124,30 @@ body {
 
   </head>
   <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">ORTS</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#"></a></li>
-            <li><a href="#">Help</a></li>
-          </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
-        </div>
-      </div>
-    </nav>
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-	    <li><a href="">amd64</a></li>
-	    <li><a href="">i386</a></li>
-          </ul>
-        </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Dashboard</h1>
+
+        <div class="col-sm-9 sm-offset-2 col-md-10 col-md-offset-1 main">
+          <h1 class="page-header">OpenBSD Release Testing Stats</h1>
 
           <div class="row placeholders">
             <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
+	      <div id="tests-by-arch" style="min-width: 200px; height: 300px; max-width: 400px; margin: 0 auto"></div>
+	      <h4>Tests by arch</h4>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
+	      <div id="tests-by-media" style="min-width: 200px; height: 300px; max-width: 400px; margin: 0 auto"></div>
+
+              <h4>Tests by media</h4>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
+	      <div id="tests-ins-vs-up" style="min-width: 200px; height: 300px; max-width: 400px; margin: 0 auto"></div>
+              <h4>Upgrade vs Install</h4>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
+	      <div id="tests-suc-vs-fail" style="min-width: 200px; height: 300px; max-width: 400px; margin: 0 auto"></div>
+              <h4>Success vs Fail</h4>
             </div>
           </div>
 
@@ -203,16 +172,16 @@ body {
 		{{ range . }}
 		<tr>
 		  <td>{{ .Tester }}</td>
-		  <td>{{ .ArchName }}</td>
-		  <td>{{ .BootMethod }}</td>
-		  <td>
+		  <td class="arch">{{ .ArchName }}</td>
+		  <td class="boot-media">{{ .BootMethod }}</td>
+		  <td class="install-method">
 		    {{ if .InstMethod }}
 		    upgrade
 		    {{ else }}
 		    install
 		    {{end}}
 		  </td>
-		  <td>
+		  <td class="success-fail">
 		    {{if .Status}}
 		    <span class="glyphicon glyphicon-ok"></span>
 		    {{else}}
@@ -244,9 +213,9 @@ body {
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
-
-
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="/public/graphs.js"></script>
   </body>
 </html>

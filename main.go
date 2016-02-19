@@ -11,7 +11,7 @@ import (
 	"github.com/qbit/pgenv"
 )
 
-type Test struct {
+type test struct {
 	Tester      string
 	ArchName    string
 	BootMethod  string
@@ -24,9 +24,9 @@ type Test struct {
 	Date        time.Time
 }
 
-type Tests []Test
+type tests []test
 
-func getTests() (Tests, error) {
+func getTests() (tests, error) {
 	var query = `
 select
  tester,
@@ -43,7 +43,7 @@ from test
  join install on install.id = test.installid
  join arch on arch.id = install.archid
 `
-	var tests Tests
+	var tests tests
 
 	var s = pgenv.ConnStr{}
 	s.SetDefaults()
@@ -59,8 +59,10 @@ from test
 	}
 
 	defer rows.Close()
+	defer db.Close()
+
 	for rows.Next() {
-		var t = Test{}
+		var t = test{}
 		err := rows.Scan(
 			&t.Tester,
 			&t.ArchName,
@@ -84,17 +86,19 @@ from test
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	var templates = template.Must(template.ParseFiles("index.html"))
-	p, err := getTests()
+	table, err := getTests()
 	if err != nil {
 		log.Println(err)
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	templates.ExecuteTemplate(w, "index.html", p)
+	templates.ExecuteTemplate(w, "index.html", table)
 }
 
 func main() {
+	fs := http.FileServer(http.Dir("public"))
+	http.Handle("/public/", http.StripPrefix("/public/", fs))
 	http.HandleFunc("/", handler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
